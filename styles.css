@@ -143,6 +143,37 @@ body.is-loading {
     max-width: 360px;
     height: auto;
 }
+
+.play-banners {
+    position: absolute;
+    bottom: 2rem;
+    left: 2rem;
+    display: flex;
+    gap: 0.75rem;
+    width: 45%;
+}
+
+.play-banners img {
+    height: auto;
+    max-height: 80px;
+    display: block;
+    border-radius: 4px;
+    object-fit: contain;
+}
+
+.play-banner-link {
+    display: block;
+    transition: transform 0.3s ease;
+}
+
+.play-banner-link:hover {
+    transform: translateY(-8px);
+}
+
+.play-banner-link img {
+    cursor: pointer;
+}
+
 main {
     padding: 2rem;
     max-width: 1200px;
