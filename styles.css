@@ -179,3 +179,85 @@ main {
     max-width: 1200px;
     margin: 0 auto;
 }
+
+/* Grey diagonal triangle panel for characters page */
+body.characters-page {
+    position: relative;
+}
+
+.side-triangle {
+    position: absolute;
+    /* slightly raised so the diagonal extends past the bottom */
+    top: -6vh;
+    left: 0;
+    /* span full viewport width so clip-path percentages map to site width */
+    width: 100vw;
+    max-width: 1400px;
+    /* make the panel tall enough to reach the bottom of long pages */
+    height: calc(100vh + 300px);
+    background: #3f3f3f;
+    /* top edge is 50% of the width to create a wider top tip */
+    clip-path: polygon(0 0, 50% 0, 0 100%);
+    z-index: 50; /* under navbar (100) */
+    pointer-events: none;
+}
+
+/* Smaller red diagonal triangle */
+.red-triangle {
+    position: absolute;
+    top: 10rem;
+    left: 0;
+    width: 50vw;
+    max-width: 600px;
+    height: calc(60vh);
+    background: #c74b44;
+    clip-path: polygon(0 0, 50% 0, 0 100%);
+    z-index: 55;
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+}
+
+.red-triangle-text {
+    color: rgb(0, 0, 0);
+    font-size: 2rem;
+    font-weight: bold;
+    text-align: left;
+    transform: rotate(-45deg);
+    writing-mode: horizontal-tb;
+    max-width: 150px;
+    position: absolute;
+    top: 10%;
+    left: 15%;
+    transform: translate(-50%, -50%);
+}
+
+@media (max-width: 900px) {
+    .side-triangle {
+        max-width: 900px;
+        height: calc(100vh + 250px);
+    }
+
+    .red-triangle {
+        width: 55vw;
+        max-width: 450px;
+        height: calc(55vh);
+    }
+}
+
+@media (max-width: 600px) {
+    .side-triangle {
+        max-width: 600px;
+        height: calc(100vh + 200px);
+    }
+
+    .red-triangle {
+        width: 60vw;
+        max-width: 300px;
+        height: calc(50vh);
+    }
+}
+
+
