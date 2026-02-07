@@ -218,6 +218,7 @@ body.characters-page {
     align-items: center;
     justify-content: center;
     padding: 2rem;
+    transition: background-color 0.35s ease-out;
 }
 
 .red-triangle-text {
@@ -232,6 +233,11 @@ body.characters-page {
     top: 10%;
     left: 15%;
     transform: translate(-50%, -50%);
+    transition: color 0.35s ease-out;
+}
+
+.red-triangle-text.light {
+    color: #ffffff;
 }
 
 @media (max-width: 900px) {
@@ -284,17 +290,21 @@ body.characters-page {
     display: flex;
     justify-content: center;
     align-items: center;
+    min-height: 520px;
 }
 
 .character-image img {
     max-width: 100%;
+    max-height: 520px;
     height: auto;
+    width: auto;
+    object-fit: contain;
     display: block;
 }
 
 .character-info {
     padding-right: 2rem;
-    margin-top: -12rem;
+    align-self: center;
 }
 
 .character-info h1 {
@@ -316,6 +326,29 @@ body.characters-page {
     line-height: 1.6;
     color: #555;
     max-width: 500px;
+}
+
+.character-card.animate .character-image img,
+.character-card.animate .character-info {
+    animation: characterFadeSlide 0.35s ease-out;
+}
+
+@keyframes characterFadeSlide {
+    from {
+        opacity: 0;
+        transform: translateX(-18px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .character-card.animate .character-image img,
+    .character-card.animate .character-info {
+        animation: none;
+    }
 }
 
 @media (max-width: 900px) {
@@ -359,16 +392,24 @@ body.characters-page {
 }
 
 /* Character thumbnail buttons */
+.character-thumbnails-wrap {
+    max-width: 1400px;
+    margin: 0 auto 0 6rem;
+    padding: 0 2rem 2rem 2rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    position: relative;
+    z-index: 60;
+}
+
 .character-thumbnails {
     display: flex;
     gap: 1rem;
-    justify-content: flex-end;
-    padding: 0 2rem 2rem 2rem;
-    margin: -15rem auto 0 auto;
-    max-width: 1400px;
-    position: relative;
-    z-index: 60;
-    padding-right: 3rem;
+    justify-content: flex-start;
+    grid-column: 2 / 3;
+    padding: 0;
+    margin: 0;
 }
 
 .character-thumb {
@@ -416,8 +457,16 @@ body.characters-page {
 }
 
 @media (max-width: 900px) {
-    .character-thumbnails {
+    .character-thumbnails-wrap {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+        margin: 0 auto;
         padding: 2rem 2rem 2rem 2rem;
+    }
+
+    .character-thumbnails {
+        grid-column: auto;
+        justify-content: flex-start;
         gap: 0.8rem;
     }
 
@@ -428,8 +477,11 @@ body.characters-page {
 }
 
 @media (max-width: 600px) {
-    .character-thumbnails {
+    .character-thumbnails-wrap {
         padding: 1rem 1rem 1rem 1rem;
+    }
+
+    .character-thumbnails {
         gap: 0.5rem;
     }
 
