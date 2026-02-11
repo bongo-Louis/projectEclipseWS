@@ -9,7 +9,7 @@ const hideLoading = () => {
 
 const restDbConfig = {
 	baseUrl: "https://bongiku-dc4e.restdb.io/rest",
-	collection: "Bongiku",
+	collection: "bongiku",
 	apiKey: "698c246ebf4bcc668d53e4aa"
 };
 
@@ -85,6 +85,214 @@ const updateLoginButton = () => {
 			loginButton.href = accountHref;
 		}
 	}
+};
+
+const initializeAccountPage = () => {
+	const accountForm = document.querySelector("[data-account-form]");
+	if (!accountForm) return;
+
+	const authUser = sessionStorage.getItem("authUser");
+	const avatarImg = document.querySelector("[data-account-avatar]");
+	const fallbackEl = document.querySelector("[data-account-fallback]");
+	const usernameEl = document.querySelector("[data-account-username]");
+	const statusEl = document.querySelector("[data-account-status]");
+	const guardEl = document.querySelector("[data-account-guard]");
+	const fileInput = accountForm.querySelector("[data-account-file]");
+	const saveButton = accountForm.querySelector("[data-account-save]");
+	const imgbbKey = "3d5e806a3484cf0f4a3c278564ddc8fa";
+	let cachedUser = null;
+
+	const setStatus = (message, isError = false) => {
+		if (!statusEl) return;
+		statusEl.textContent = message;
+		statusEl.classList.toggle("error", isError);
+	};
+
+	const setBusy = (isBusy) => {
+		accountForm.classList.toggle("is-busy", isBusy);
+		if (saveButton) saveButton.disabled = isBusy;
+		if (fileInput) fileInput.disabled = isBusy;
+	};
+
+	const setAvatar = (url) => {
+		if (avatarImg) {
+			avatarImg.src = url || "";
+			avatarImg.alt = authUser ? `${authUser} profile picture` : "Profile picture";
+			avatarImg.style.display = url ? "block" : "none";
+		}
+		if (fallbackEl) {
+			const initial = authUser ? authUser.charAt(0).toUpperCase() : "?";
+			fallbackEl.textContent = initial || "?";
+			fallbackEl.style.display = url ? "none" : "inline";
+		}
+	};
+
+	const fetchUser = async () => {
+		if (!authUser) return null;
+
+		const query = encodeURIComponent(JSON.stringify({ username: authUser }));
+		const endpoint = `${restDbConfig.baseUrl}/${restDbConfig.collection}?q=${query}`;
+
+		const response = await fetch(endpoint, {
+			method: "GET",
+			headers: {
+				"x-apikey": restDbConfig.apiKey,
+				"Content-Type": "application/json"
+			}
+		});
+
+		if (!response.ok) {
+			throw new Error("Account lookup failed.");
+		}
+
+		const results = await response.json();
+		if (Array.isArray(results) && results.length > 0) {
+			return results[0];
+		}
+
+		const fallbackResponse = await fetch(
+			`${restDbConfig.baseUrl}/${restDbConfig.collection}?max=1000`,
+			{
+				method: "GET",
+				headers: {
+					"x-apikey": restDbConfig.apiKey,
+					"Content-Type": "application/json"
+				}
+			}
+		);
+
+		if (!fallbackResponse.ok) {
+			throw new Error("Account lookup failed.");
+		}
+
+		const fallbackResults = await fallbackResponse.json();
+		if (Array.isArray(fallbackResults)) {
+			const match = fallbackResults.find((item) => {
+				const usernameValue = String(item?.username || "").toLowerCase();
+				return usernameValue === authUser.toLowerCase();
+			});
+			return match || null;
+		}
+
+		return null;
+	};
+
+	if (usernameEl) {
+		usernameEl.textContent = authUser || "Guest";
+	}
+
+	setAvatar("");
+
+	if (!authUser) {
+		setStatus("Please log in to update your profile.", true);
+		if (guardEl) {
+			guardEl.classList.remove("hidden");
+		}
+		if (saveButton) saveButton.disabled = true;
+		if (fileInput) fileInput.disabled = true;
+		return;
+	}
+
+	if (guardEl) {
+		guardEl.classList.add("hidden");
+	}
+
+	setStatus("Loading your profile...");
+	fetchUser()
+		.then((user) => {
+			cachedUser = user;
+			const pfpUrl = user?.pfp;
+			setAvatar(pfpUrl || "");
+			setStatus(pfpUrl ? "Profile loaded." : "No profile picture yet.");
+		})
+		.catch(() => {
+			setStatus("Unable to load account details.", true);
+		});
+
+	if (fileInput) {
+		fileInput.addEventListener("change", () => {
+			const file = fileInput.files?.[0];
+			if (!file) {
+				setStatus("Choose an image to upload.", true);
+				return;
+			}
+			const previewUrl = URL.createObjectURL(file);
+			setAvatar(previewUrl);
+			setStatus("Ready to upload.");
+		});
+	}
+
+	accountForm.addEventListener("submit", async (event) => {
+		event.preventDefault();
+
+		const file = fileInput?.files?.[0];
+		if (!file) {
+			setStatus("Please choose an image file first.", true);
+			return;
+		}
+
+		setBusy(true);
+		setStatus("Uploading image...");
+
+		try {
+			const uploadData = new FormData();
+			uploadData.append("image", file);
+
+			const imgbbResponse = await fetch(
+				`https://api.imgbb.com/1/upload?key=${imgbbKey}`,
+				{
+					method: "POST",
+					body: uploadData
+				}
+			);
+
+			const imgbbJson = await imgbbResponse.json().catch(() => null);
+			if (!imgbbResponse.ok || !imgbbJson?.success) {
+				const imgbbMessage = imgbbJson?.error?.message || "Image upload failed.";
+				throw new Error(imgbbMessage);
+			}
+			const imageUrl = imgbbJson?.data?.url;
+			if (!imageUrl) {
+				throw new Error("Image URL missing.");
+			}
+
+			setStatus("Saving to your account...");
+			const user = cachedUser || (await fetchUser());
+			if (!user) {
+				throw new Error(`Account not found for ${authUser}.`);
+			}
+			const recordId = user?._id || user?.id || user?._id?.$oid;
+			if (!recordId) {
+				throw new Error("Account record id missing.");
+			}
+
+			const updateEndpoint = `${restDbConfig.baseUrl}/${restDbConfig.collection}/${encodeURIComponent(recordId)}`;
+			const updatePayload = { ...user, pfp: imageUrl };
+			const updateResponse = await fetch(updateEndpoint, {
+				method: "PUT",
+				headers: {
+					"x-apikey": restDbConfig.apiKey,
+					"Content-Type": "application/json"
+				},
+				body: JSON.stringify(updatePayload)
+			});
+
+			if (!updateResponse.ok) {
+				const errorText = await updateResponse.text();
+				const detail = errorText ? `Account update failed: ${errorText}` : "Account update failed.";
+				throw new Error(detail);
+			}
+
+			cachedUser = updatePayload;
+			setAvatar(imageUrl);
+			setStatus("Profile picture updated.");
+		} catch (error) {
+			const message = error instanceof Error ? error.message : "Unable to update profile picture.";
+			setStatus(message, true);
+		} finally {
+			setBusy(false);
+		}
+	});
 };
 
 // Character data
@@ -254,6 +462,7 @@ window.addEventListener("load", () => {
 
 	initializeLoginForm();
 	updateLoginButton();
+	initializeAccountPage();
 });
 
 window.addEventListener("pageshow", () => {

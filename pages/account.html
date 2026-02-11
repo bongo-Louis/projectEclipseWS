@@ -9,7 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
 </head>
-<body>
+<body class="account-page">
     <nav class="navbar">
         <div class="nav-container">
             <div class="logo">
@@ -26,9 +26,35 @@
         </div>
     </nav>
 
-    <main>
-        <h1>Account Settings</h1>
-        <p>This is a placeholder for account settings. More features coming soon.</p>
+    <main class="account-main">
+        <section class="account-card">
+            <div class="account-header">
+                <div class="account-avatar">
+                    <img src="" alt="Profile picture" data-account-avatar>
+                    <span class="account-avatar-fallback" data-account-fallback>?</span>
+                </div>
+                <div class="account-info">
+                    <p class="account-label">Signed in as</p>
+                    <h1 data-account-username>Guest</h1>
+                    <p class="account-subtitle">Upload a new profile picture for your account.</p>
+                </div>
+            </div>
+
+            <form class="account-form" data-account-form>
+                <label class="account-upload">
+                    <span>Select a new profile picture</span>
+                    <input type="file" accept="image/*" data-account-file>
+                </label>
+                <div class="account-actions">
+                    <button class="account-save" type="submit" data-account-save>Upload and save</button>
+                    <p class="account-status" data-account-status></p>
+                </div>
+                <p class="account-guard" data-account-guard>
+                    Please log in to update your profile.
+                    <a href="login.html">Go to login</a>
+                </p>
+            </form>
+        </section>
     </main>
 
     <script src="../main.js"></script>
