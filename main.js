@@ -182,10 +182,14 @@ const initializeAccountPage = () => {
 	const usernameEl = document.querySelector("[data-account-username]");
 	const statusEl = document.querySelector("[data-account-status]");
 	const guardEl = document.querySelector("[data-account-guard]");
+	const logoutButton = document.querySelector("[data-logout-button]");
+	const saveList = document.querySelector("[data-save-list]");
+	const saveEmpty = document.querySelector("[data-save-empty]");
 	const fileInput = accountForm.querySelector("[data-account-file]");
 	const saveButton = accountForm.querySelector("[data-account-save]");
 	const imgbbKey = "3d5e806a3484cf0f4a3c278564ddc8fa";
 	let cachedUser = null;
+	let currentSaveEntries = [];
 
 	const setStatus = (message, isError = false) => {
 		if (!statusEl) return;
@@ -210,6 +214,71 @@ const initializeAccountPage = () => {
 			fallbackEl.textContent = initial || "?";
 			fallbackEl.style.display = url ? "none" : "inline";
 		}
+	};
+
+	const normalizeSaveData = (raw) => {
+		if (!raw) return [];
+
+		let data = raw;
+		if (typeof raw === "string") {
+			try {
+				data = JSON.parse(raw);
+			} catch (error) {
+				setStatus("Save data is unreadable.", true);
+				return [];
+			}
+		}
+
+		if (Array.isArray(data)) {
+			return data;
+		}
+		if (typeof data === "object") {
+			return [data];
+		}
+		return [];
+	};
+
+	const renderSaveData = (raw) => {
+		if (!saveList || !saveEmpty) return;
+
+		saveList.innerHTML = "";
+		currentSaveEntries = normalizeSaveData(raw);
+
+		if (currentSaveEntries.length === 0) {
+			saveEmpty.classList.remove("hidden");
+			return;
+		}
+
+		saveEmpty.classList.add("hidden");
+		currentSaveEntries.forEach((entry, index) => {
+			const card = document.createElement("div");
+			card.className = "account-save-card";
+
+			const info = document.createElement("div");
+			info.className = "account-save-info";
+
+			const title = document.createElement("h3");
+			title.textContent = entry?.game || "Untitled game";
+
+			const meta = document.createElement("p");
+			meta.className = "account-save-meta";
+			const chapter = entry?.chapter ?? "-";
+			const points = entry?.points ?? "-";
+			meta.textContent = `Chapter ${chapter} · ${points} points`;
+
+			info.appendChild(title);
+			info.appendChild(meta);
+
+			const deleteButton = document.createElement("button");
+			deleteButton.type = "button";
+			deleteButton.className = "account-save-delete";
+			deleteButton.textContent = "Delete";
+			deleteButton.dataset.saveIndex = String(index);
+
+			card.appendChild(info);
+			card.appendChild(deleteButton);
+			saveList.appendChild(card);
+		});
 	};
 
 	const fetchUser = async () => {
@@ -275,6 +344,7 @@ const initializeAccountPage = () => {
 		}
 		if (saveButton) saveButton.disabled = true;
 		if (fileInput) fileInput.disabled = true;
+		if (logoutButton) logoutButton.disabled = true;
 		return;
 	}
 
@@ -288,6 +358,7 @@ const initializeAccountPage = () => {
 			cachedUser = user;
 			const pfpUrl = user?.pfp;
 			setAvatar(pfpUrl || "");
+			renderSaveData(user?.save_data ?? user?.saveData ?? []);
 			setStatus(pfpUrl ? "Profile loaded." : "No profile picture yet.");
 		})
 		.catch(() => {
@@ -378,6 +449,67 @@ const initializeAccountPage = () => {
 			setBusy(false);
 		}
 	});
+
+	if (logoutButton) {
+		logoutButton.addEventListener("click", () => {
+			sessionStorage.removeItem("authUser");
+			window.location.href = "../index.html";
+		});
+	}
+
+	if (saveList) {
+		saveList.addEventListener("click", async (event) => {
+			const target = event.target;
+			if (!(target instanceof HTMLElement)) return;
+			if (!target.matches("[data-save-index]")) return;
+
+			const index = Number(target.dataset.saveIndex);
+			if (Number.isNaN(index)) return;
+			if (!cachedUser) {
+				setStatus("Account not loaded yet.", true);
+				return;
+			}
+
+			target.setAttribute("disabled", "disabled");
+			setStatus("Deleting save...", false);
+
+			try {
+				const recordId = cachedUser?._id || cachedUser?.id || cachedUser?._id?.$oid;
+				if (!recordId) {
+					throw new Error("Account record id missing.");
+				}
+
+				const nextEntries = currentSaveEntries.filter((_, entryIndex) => entryIndex !== index);
+				const updateEndpoint = `${restDbConfig.baseUrl}/${restDbConfig.collection}/${encodeURIComponent(recordId)}`;
+				const updatePayload = { ...cachedUser, save_data: nextEntries };
+
+				const updateResponse = await fetch(updateEndpoint, {
+					method: "PUT",
+					headers: {
+						"x-apikey": restDbConfig.apiKey,
+						"Content-Type": "application/json"
+					},
+					body: JSON.stringify(updatePayload)
+				});
+
+				if (!updateResponse.ok) {
+					const errorText = await updateResponse.text();
+					const detail = errorText ? `Save delete failed: ${errorText}` : "Save delete failed.";
+					throw new Error(detail);
+				}
+
+				cachedUser = updatePayload;
+				renderSaveData(nextEntries);
+				setStatus("Save deleted.");
+			} catch (error) {
+				const message = error instanceof Error ? error.message : "Unable to delete save.";
+				setStatus(message, true);
+				if (target instanceof HTMLButtonElement) {
+					target.disabled = false;
+				}
+			}
+		});
+	}
 };
 
 // Character data

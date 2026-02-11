@@ -1,0 +1,12 @@
+[
+    {
+        "game":"Project Eclipse",
+        "chapter":1,
+        "points":100
+    },
+    {
+        "game":"Project Eclipse Beta",
+        "chapter":2,
+        "points":250
+    }
+]
