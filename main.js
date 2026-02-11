@@ -72,6 +72,91 @@ const initializeLoginForm = () => {
 	});
 };
 
+const initializeRegisterForm = () => {
+	const registerForm = document.querySelector("[data-register-form]");
+	if (!registerForm) return;
+
+	const messageEl = registerForm.querySelector(".login-message");
+
+	registerForm.addEventListener("submit", async (event) => {
+		event.preventDefault();
+
+		const formData = new FormData(registerForm);
+		const username = String(formData.get("username") || "").trim();
+		const password = String(formData.get("password") || "").trim();
+
+		if (!username || !password) {
+			if (messageEl) {
+				messageEl.textContent = "Please enter a username and password.";
+			}
+			return;
+		}
+
+		if (messageEl) {
+			messageEl.textContent = "Creating your account...";
+		}
+
+		try {
+			const query = encodeURIComponent(JSON.stringify({ username }));
+			const lookupEndpoint = `${restDbConfig.baseUrl}/${restDbConfig.collection}?q=${query}`;
+			const lookupResponse = await fetch(lookupEndpoint, {
+				method: "GET",
+				headers: {
+					"x-apikey": restDbConfig.apiKey,
+					"Content-Type": "application/json"
+				}
+			});
+
+			if (!lookupResponse.ok) {
+				throw new Error("Account lookup failed.");
+			}
+
+			const existing = await lookupResponse.json();
+			if (Array.isArray(existing) && existing.length > 0) {
+				if (messageEl) {
+					messageEl.textContent = "That username is already taken.";
+				}
+				return;
+			}
+
+			const createEndpoint = `${restDbConfig.baseUrl}/${restDbConfig.collection}`;
+			const createPayload = {
+				username,
+				password,
+				has_voted: false,
+				hasVoted: false,
+				pfp: ""
+			};
+
+			const createResponse = await fetch(createEndpoint, {
+				method: "POST",
+				headers: {
+					"x-apikey": restDbConfig.apiKey,
+					"Content-Type": "application/json"
+				},
+				body: JSON.stringify(createPayload)
+			});
+
+			if (!createResponse.ok) {
+				throw new Error("Account creation failed.");
+			}
+
+			if (messageEl) {
+				messageEl.textContent = "Account created. Redirecting to login...";
+			}
+
+			const redirectTo = registerForm.getAttribute("data-redirect") || "login.html";
+			setTimeout(() => {
+				window.location.href = redirectTo;
+			}, 900);
+		} catch (error) {
+			if (messageEl) {
+				messageEl.textContent = "Unable to create an account. Please try again.";
+			}
+		}
+	});
+};
+
 const updateLoginButton = () => {
 	const loginButton = document.querySelector(".nav-login-button");
 	if (!loginButton) return;
@@ -461,6 +546,7 @@ window.addEventListener("load", () => {
 	}
 
 	initializeLoginForm();
+	initializeRegisterForm();
 	updateLoginButton();
 	initializeAccountPage();
 });
