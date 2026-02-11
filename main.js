@@ -7,6 +7,86 @@ const hideLoading = () => {
 	document.body.classList.remove("is-loading");
 };
 
+const restDbConfig = {
+	baseUrl: "https://bongiku-dc4e.restdb.io/rest",
+	collection: "Bongiku",
+	apiKey: "698c246ebf4bcc668d53e4aa"
+};
+
+const initializeLoginForm = () => {
+	const loginForm = document.querySelector("[data-login-form]");
+	if (!loginForm) return;
+
+	const messageEl = loginForm.querySelector(".login-message");
+
+	loginForm.addEventListener("submit", async (event) => {
+		event.preventDefault();
+
+		const formData = new FormData(loginForm);
+		const username = String(formData.get("username") || "").trim();
+		const password = String(formData.get("password") || "").trim();
+
+		if (!username || !password) {
+			if (messageEl) {
+				messageEl.textContent = "Please enter your username and password.";
+			}
+			return;
+		}
+
+		if (messageEl) {
+			messageEl.textContent = "Checking your details...";
+		}
+
+		const query = encodeURIComponent(JSON.stringify({ username, password }));
+		const endpoint = `${restDbConfig.baseUrl}/${restDbConfig.collection}?q=${query}`;
+
+		try {
+			const response = await fetch(endpoint, {
+				method: "GET",
+				headers: {
+					"x-apikey": restDbConfig.apiKey,
+					"Content-Type": "application/json"
+				}
+			});
+
+			if (!response.ok) {
+				throw new Error("Login request failed.");
+			}
+
+			const results = await response.json();
+			if (Array.isArray(results) && results.length > 0) {
+				sessionStorage.setItem("authUser", username);
+				const redirectTo = loginForm.getAttribute("data-redirect") || "characters.html";
+				window.location.href = redirectTo;
+				return;
+			}
+
+			if (messageEl) {
+				messageEl.textContent = "Invalid username or password.";
+			}
+		} catch (error) {
+			if (messageEl) {
+				messageEl.textContent = "Unable to reach the login service. Please try again.";
+			}
+		}
+	});
+};
+
+const updateLoginButton = () => {
+	const loginButton = document.querySelector(".nav-login-button");
+	if (!loginButton) return;
+
+	const authUser = sessionStorage.getItem("authUser");
+	if (authUser) {
+		loginButton.textContent = "Account";
+		loginButton.setAttribute("aria-label", `Account for ${authUser}`);
+		const accountHref = loginButton.getAttribute("data-account-href");
+		if (accountHref) {
+			loginButton.href = accountHref;
+		}
+	}
+};
+
 // Character data
 const characterData = {
 	tora: {
@@ -171,6 +251,9 @@ window.addEventListener("load", () => {
 			redTriangleText.classList.toggle("light", document.querySelector(".character-thumb.active")?.getAttribute("data-character") === "necro");
 		}
 	}
+
+	initializeLoginForm();
+	updateLoginButton();
 });
 
 window.addEventListener("pageshow", () => {
