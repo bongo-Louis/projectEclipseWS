@@ -6,7 +6,9 @@ Our Wesbite is an informational website for our Y1 Integrated Project. It introd
 
 Project eclipse is a fan made visual novel game based on Pokemon Ultra Sun and Moon. It is an original story game, with well-known Pokemon from the Alola region. Despite being a visual novel game, we have incorporated a combat system, which is a mix of Dungeons and Dragon's dice rolling mechanic and also Pokemon. The story will have multiple endings depending on choices you make in the story, and also has achievements that you can unlock along the way, earning points to unlock side stories. 
 
-
+## Links
+Github Pages Deployment : https://bongo-louis.github.io/projectEclipseWS/ 
+Github Repository : https://github.com/bongo-Louis/projectEclipseWS
 
 ## Design Process
 
@@ -50,6 +52,8 @@ Rest.DB and ImgBB
 	- Github's Copilot chat was used to develop and troubleshoot the javascript code used between the 2 APIs for both account management, and profile picture uploads.
 Misc Website coding
 	- When not working, Github's Copilot chat was also used to troubleshoot the faulty code.
+Mobile Responsiveness
+	- Github's Copilot chat helped fix mobile CSS.
 
 ## Testing
 
