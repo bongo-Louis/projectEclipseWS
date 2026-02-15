@@ -900,5 +900,101 @@ body.characters-page {
     }
 }
 
+/* About page */
+.about-main {
+    padding: 3rem 2rem 4rem;
+    max-width: 1100px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.about-hero {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.about-logo {
+    width: min(320px, 70vw);
+    height: auto;
+    display: block;
+}
+
+.about-subtitle {
+    max-width: 700px;
+    font-size: 1.1rem;
+    line-height: 1.7;
+    color: #2a2a32;
+}
+
+.about-divider {
+    margin: 2.5rem auto;
+    border: none;
+    height: 2px;
+    width: min(760px, 80vw);
+    background: linear-gradient(90deg, rgba(70, 80, 144, 0.2), rgba(70, 80, 144, 0.7), rgba(70, 80, 144, 0.2));
+}
+
+.about-team {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.about-team-title {
+    font-size: 2rem;
+    letter-spacing: 0.02em;
+    color: #1c1c26;
+}
+
+.team-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2rem;
+}
+
+.team-card {
+    background: #f3f4f8;
+    border-radius: 20px;
+    padding: 1.8rem 2rem;
+    width: min(260px, 80vw);
+    box-shadow: 0 12px 30px rgba(28, 28, 38, 0.12);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.team-avatar {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid #ffffff;
+    box-shadow: 0 8px 20px rgba(28, 28, 38, 0.18);
+}
+
+.team-name {
+    font-size: 1.35rem;
+    color: #1c1c26;
+}
+
+.team-role {
+    color: #5c5c6a;
+    font-size: 0.95rem;
+}
+
+@media (max-width: 700px) {
+    .about-main {
+        padding: 2.5rem 1.5rem 3.5rem;
+    }
+
+    .team-card {
+        width: min(320px, 90vw);
+    }
+}
+
 
 
