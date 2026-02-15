@@ -1,34 +1,29 @@
-# Project Eclipse
+<img width="1085" height="628" alt="image" src="https://github.com/user-attachments/assets/52e5e1e0-348c-4392-ac54-b78b3c760888" /># Project Eclipse
 
-Project Eclipse is an informational website for our Y1 Integrated Project. It introduces Bongiku, shares character info, and provides simple login and account pages for a school project at Ngee Ann Polytechnic, Singapore.
+Our Wesbite is an informational website for our Y1 Integrated Project. It introduces Bongiku, shares character info, and provides simple login and account pages for a school project at Ngee Ann Polytechnic, Singapore. The website is made to introduce and promote our game, Project Eclipse. 
 
-The site focuses on a clean, friendly presentation of the project, with clear navigation and lightweight interactivity.
+Project eclipse is a fan made visual novel game based on Pokemon Ultra Sun and Moon. It is an original story game, with well-known Pokemon from the Alola region. Despite being a visual novel game, we have incorporated a combat system, which is a mix of Dungeons and Dragon's dice rolling mechanic and also Pokemon. The story will have multiple endings depending on choices you make in the story, and also has achievements that you can unlock along the way, earning points to unlock side stories. 
+
+
 
 ## Design Process
 
-**Audience**: Students and lecturers viewing the project showcase, plus classmates who want a quick overview of the project and the team.
+For the design process of the website, I took inspiration from Zenless Zone Zero's official website for the main page and character page. The about me page is similar to the about me page for Team Cherry. The website is made for Pokemon fans or visual novel enjoyers to help promote and introduce our game, Project Eclipse. The website has a main page with art featuring 3 important characters in our stoory, with a black and white filter, to match the style of our game. The character page showcases the main characters of the game for people to find out more about, and also attract them to play the game if they like the characters. The website also serves as a short introduction to our game without spoiling too much of the story. The about me page introduces our group that made the game. 
 
-**Goals**:
-- Explain what Bongiku is and why it exists.
-- Highlight characters and the team behind the project.
-- Provide a simple login/register experience for the demo.
+As a user, I want to find out more about Project eclipse, so that I can decide on whether to play the game or not. 
+As a user, I want to find out more about the characters in Project Eclipse, so that I can quickly gather information on the cast and learn about the world. 
 
-**User Stories**:
-- As a visitor, I want to understand the project in one page, so that I can decide whether to explore more.
-- As a visitor, I want to view the characters, so that I can learn about the game world.
-- As a user, I want to register or log in, so that I can access the account page.
-- As a user, I want to see my account details, so that I can confirm my sign-in status.
+Figma wireframe:https://www.figma.com/design/LtZ6yuLg7gxWPhmQ2aTmiO/IP_bongiku_website?node-id=13-5&t=Q5kifqhDgACh0R1s-1
 
-**Wireframes / Mockups**:
-- Figma (add the wireframes later)
+
 
 ## Features
 
 ### Existing Features
 - Navigation bar - quick access to Home, Characters, and About pages.
-- Hero section (Home) - highlights the project branding.
+- Home Page - highlights the project branding.
 - Characters page - displays character visuals and details.
-- About page - introduces Bongiku and the team.
+- About me page - introduces Bongiku and the team.
 - Login page - basic login flow tied to a hosted database.
 - Register page - creates a new demo account.
 - Account page - shows user info and lets users update profile data.
@@ -36,17 +31,17 @@ The site focuses on a clean, friendly presentation of the project, with clear na
 
 ### Features Left to Implement
 - Game download or playable demo embed.
-- Team member role descriptions and bios.
 - More account personalization options.
 
 ## Technologies Used
 
-- HTML5 - page structure and semantic content.
-- CSS3 - layout, branding, and responsive styling.
-- JavaScript (ES6) - form handling, navigation updates, and dynamic UI.
+- HTML - page structure and semantic content.
+- CSS - layout, branding, and responsive styling.
+- JavaScript - form handling, navigation updates, and dynamic UI.
 - RESTdb.io - simple hosted storage for login/register demo.
-- Lottie (dotlottie-wc) - animation overlay during login.
-- Google Fonts (Quicksand) - typography.
+- Lottie - animation overlay during login.
+- Google Fonts - typography.
+- imgBB - Image CDN api that hosts account profile pictures
 
 ## Assistive AI
 
@@ -81,14 +76,21 @@ Manual tests were performed for key user stories:
 - Add any bugs discovered during testing here.
 
 ## Credits
+Nintendo and Gamefreak for the Pokemon characters and official art. 
+https://www.pokemon.com/us/pokemon-video-games/pokemon-ultra-sun-and-pokemon-ultra-moon
+
+Layout from Zenless Zone Zero website
+https://zenless.hoyoverse.com/en-us/main
 
 ### Content
 - Project text written by the team.
-
+  
 ### Media
-- All images are project assets created or provided by the team.
+
+Bulbapedia for the images of the characters used.
+https://bulbapedia.bulbagarden.net/wiki/Main_Page
 
 ### Acknowledgements
-- Ngee Ann Polytechnic for the project brief and guidance.
+- I recieved inspiration for this project from the Zenless Zone Zero, Honkai Star Rail and Genshin Impact's official websites, and used a layout similar to theirs. 
 
 
