@@ -26,14 +26,11 @@ Figma wireframe:https://www.figma.com/design/LtZ6yuLg7gxWPhmQ2aTmiO/IP_bongiku_w
 - Home Page - highlights the project branding.
 - Characters page - displays character visuals and details.
 - About me page - introduces Bongiku and the team.
-- Login page - basic login flow tied to a hosted database.
+- Login page - basic login flow tied to a hosted database, manage save data.
 - Register page - creates a new demo account.
 - Account page - shows user info and lets users update profile data.
 - Loading/animation overlays - improves feedback during login.
 
-### Features Left to Implement
-- Game download or playable demo embed.
-- More account personalization options.
 
 ## Technologies Used
 
@@ -49,6 +46,10 @@ Figma wireframe:https://www.figma.com/design/LtZ6yuLg7gxWPhmQ2aTmiO/IP_bongiku_w
 
 This project used AI tools for development support and troubleshooting.
 
+Rest.DB and ImgBB
+	- Github's Copilot chat was used to develop and troubleshoot the javascript code used between the 2 APIs for both account management, and profile picture uploads.
+Misc Website coding
+	- When not working, Github's Copilot chat was also used to troubleshoot the faulty code.
 
 ## Testing
 
@@ -71,11 +72,9 @@ Manual tests were performed for key user stories:
 	2. Check layout on mobile widths.
 
 **Browsers / Screen Sizes**:
-- Tested on Chrome and Edge on Windows.
+- Tested with Chrome Windows.
 - Layout checked at mobile and desktop widths.
 
-**Known Issues**:
-- Add any bugs discovered during testing here.
 
 ## Credits
 Nintendo and Gamefreak for the Pokemon characters and official art. 
