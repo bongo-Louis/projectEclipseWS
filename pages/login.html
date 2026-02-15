@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.8.11/dist/dotlottie-wc.js" type="module"></script>
 </head>
 <body class="login-page">
     <nav class="navbar">
@@ -25,6 +26,18 @@
             </div>
         </div>
     </nav>
+
+    <div class="login-overlay" data-login-overlay aria-hidden="true">
+        <div class="login-overlay-content" role="status" aria-live="polite">
+            <dotlottie-wc
+                src="https://lottie.host/32ff2a9c-4090-4f42-9e81-294048471bdf/R70yBgWqU1.lottie"
+                style="width: 300px; height: 300px;"
+                autoplay
+                loop
+            ></dotlottie-wc>
+            <p>Signing you in...</p>
+        </div>
+    </div>
 
     <main class="login-main">
         <section class="login-card" aria-label="Login form">

@@ -18,6 +18,13 @@ const initializeLoginForm = () => {
 	if (!loginForm) return;
 
 	const messageEl = loginForm.querySelector(".login-message");
+	const overlayEl = document.querySelector("[data-login-overlay]");
+
+	const setOverlayVisible = (isVisible) => {
+		if (!overlayEl) return;
+		overlayEl.classList.toggle("is-visible", isVisible);
+		overlayEl.setAttribute("aria-hidden", String(!isVisible));
+	};
 
 	loginForm.addEventListener("submit", async (event) => {
 		event.preventDefault();
@@ -30,12 +37,14 @@ const initializeLoginForm = () => {
 			if (messageEl) {
 				messageEl.textContent = "Please enter your username and password.";
 			}
+			setOverlayVisible(false);
 			return;
 		}
 
 		if (messageEl) {
 			messageEl.textContent = "Checking your details...";
 		}
+		setOverlayVisible(true);
 
 		const query = encodeURIComponent(JSON.stringify({ username, password }));
 		const endpoint = `${restDbConfig.baseUrl}/${restDbConfig.collection}?q=${query}`;
@@ -64,10 +73,12 @@ const initializeLoginForm = () => {
 			if (messageEl) {
 				messageEl.textContent = "Invalid username or password.";
 			}
+			setOverlayVisible(false);
 		} catch (error) {
 			if (messageEl) {
 				messageEl.textContent = "Unable to reach the login service. Please try again.";
 			}
+			setOverlayVisible(false);
 		}
 	});
 };
