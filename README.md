@@ -1,4 +1,6 @@
-<img width="1085" height="628" alt="image" src="https://github.com/user-attachments/assets/52e5e1e0-348c-4392-ac54-b78b3c760888" /># Project Eclipse
+<img width="1085" height="628" alt="image" src="https://github.com/bongo-Louis/projectEclipseWS/blob/main/img/game_logo.png?raw=true" />
+
+# Project Eclipse
 
 Our Wesbite is an informational website for our Y1 Integrated Project. It introduces Bongiku, shares character info, and provides simple login and account pages for a school project at Ngee Ann Polytechnic, Singapore. The website is made to introduce and promote our game, Project Eclipse. 
 
